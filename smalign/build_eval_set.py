@@ -8,12 +8,13 @@ path_obj = Path("eval_sets/alpaca_eval_300_seed42.json")
 N = 300
 SEED = 42
 
-from datasets import load_dataset
+
+from huggingface_hub import hf_hub_download
+
 
 def load_alpaca_eval():
-
-    data = load_dataset(dataset_repository, "alpaca_eval", split="eval")
-    return list(data)
+    path = hf_hub_download(dataset_repository, "alpaca_eval.json", repo_type="dataset")
+    return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
 rows = load_alpaca_eval()
