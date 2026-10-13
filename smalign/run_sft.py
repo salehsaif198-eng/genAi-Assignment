@@ -3,7 +3,7 @@ import json
 import torch
 
 import smalign.sft_setup as cfg
-from smalign.sft_build import build_everything
+from smalign.sft_build import get_ready
 from smalign.sft_main import compute_sft_loss
 
 
@@ -45,7 +45,7 @@ total_steps = (micro_per_epoch // cfg.ACCUM_STEPS) * cfg.EPOCHS
 print("train examples:", len(train_pairs))
 print("optimizer steps:", total_steps)
 
-model, tokenizer, optimizer, scheduler, scaler = build_everything(total_steps)
+model, tokenizer, optimizer, scheduler, scaler = get_ready(total_steps)
 
 resume_dir = cfg.OUT_DIR / "resume"
 start_step, best_val = cfg.load_all(resume_dir, optimizer, scheduler, scaler)
