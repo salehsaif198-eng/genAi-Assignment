@@ -55,12 +55,14 @@ def compute_sft_loss(model, tokenizer, prompts, responses, max_length):
     return computing_the_sft_loss(model, tokenizer, prompts, responses, max_length)
 
 
+from smalign.dpo_core import the_dpo_batch
+
 def build_dpo_batch(tokenizer, prompts, chosen_responses, rejected_responses, max_length):
-    """Return separate response-masked LM batches for chosen and rejected rows."""
+    
 
-    raise NotImplementedError("Connect this adapter to your DPO batch builder")
+    return the_dpo_batch(tokenizer, prompts, chosen_responses, rejected_responses, max_length)
 
-
+from smalign.dpo_core import compute_dpo_loss_logps
 def compute_dpo_loss_from_logps(
     policy_chosen_logps,
     policy_rejected_logps,
@@ -70,8 +72,15 @@ def compute_dpo_loss_from_logps(
 ):
     """Return the scalar mean DPO objective from per-example log probabilities."""
 
-    raise NotImplementedError("Connect this adapter to your tensor-level DPO loss")
+    return compute_dpo_loss_logps(
+    policy_chosen_logps,
+    policy_rejected_logps,
+    reference_chosen_logps,
+    reference_rejected_logps,
+    beta,
+)
 
+from smalign.dpo_core import compute_dpo_loss as computing_the_dpo_loss
 
 def compute_dpo_loss(
     policy_model,
@@ -85,4 +94,13 @@ def compute_dpo_loss(
 ):
     """Return a scalar mean DPO loss with a frozen reference computation."""
 
-    raise NotImplementedError("Connect this adapter to your DPO loss code")
+    return computing_the_dpo_loss(
+    policy_model,
+    reference_model,
+    tokenizer,
+    prompts,
+    chosen_responses,
+    rejected_responses,
+    beta,
+    max_length,
+)
