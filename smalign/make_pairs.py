@@ -70,7 +70,11 @@ def pair_them_off(first, first_name, second, second_name, where):
         pairs.append(build_one_row(one_id, a_name, b_name, source_by_name))
 
     where.parent.mkdir(parents=True, exist_ok=True)
-    where.write_text(json.dumps(pairs, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    lines = []
+    for row in pairs:
+        lines.append(json.dumps(row, ensure_ascii=False))
+    where.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     print(where.name, "-", len(pairs), "pairs,", missed, "ids skipped")
     print("   ", first_name, "sits in slot A", tally_slot_a(pairs, first_name), "times")
@@ -79,8 +83,8 @@ def pair_them_off(first, first_name, second, second_name, where):
 
 if __name__ == "__main__":
     line_ups = [
-        ("sft_alpaca_eval.json", "sft", "dpo_uf_alpaca_eval.json", "dpo_uf", "uf_dpo_vs_sft.json"),
-        ("sft_hh_eval.json", "sft", "dpo_hh_eval.json", "dpo_hh", "hh_dpo_vs_sft.json"),
+        ("sft_alpaca_eval.json", "sft", "dpo_uf_alpaca_eval.json", "dpo_uf", "uf_dpo_vs_sft.jsonl"),
+        ("sft_hh_eval.json", "sft", "dpo_hh_eval.json", "dpo_hh", "hh_dpo_vs_sft.jsonl"),
     ]
 
     for one_file, one_name, other_file, other_name, saved_as in line_ups:
