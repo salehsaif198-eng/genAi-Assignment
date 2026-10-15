@@ -23,7 +23,6 @@ SETTINGS = {
     "epochs": 3,
     "beta": 0.1,
     "max_length": 512,
-    "max_prompt_length": 256,
 }
 
 
@@ -82,7 +81,6 @@ def the_trainer_bits(cfg):
         per_device_eval_batch_size=cfg["batch"],
         num_train_epochs=cfg["epochs"],
         max_length=cfg["max_length"],
-        max_prompt_length=cfg["max_prompt_length"],
         logging_steps=10,
         eval_strategy="epoch",
         save_strategy="epoch",
