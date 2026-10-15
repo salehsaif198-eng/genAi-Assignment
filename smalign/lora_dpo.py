@@ -95,27 +95,28 @@ def say_where(folder):
     print("all finished, the adapter is sitting in", folder)
 
 
-train_set, val_set = grab_and_cut(SETTINGS)
-print("training on", len(train_set), "pairs, keeping", len(val_set), "back to check")
+if __name__ == "__main__":
+    train_set, val_set = grab_and_cut(SETTINGS)
+    print("training on", len(train_set), "pairs, keeping", len(val_set), "back to check")
 
-tokenizer = grab_tokenizer(SETTINGS)
-base = AutoModelForCausalLM.from_pretrained(SETTINGS["model"])
+    tokenizer = grab_tokenizer(SETTINGS)
+    base = AutoModelForCausalLM.from_pretrained(SETTINGS["model"])
 
-SETTINGS["out_dir"].mkdir(parents=True, exist_ok=True)
-saved_to = SETTINGS["out_dir"] / "adapter"
+    SETTINGS["out_dir"].mkdir(parents=True, exist_ok=True)
+    saved_to = SETTINGS["out_dir"] / "adapter"
 
-trainer = DPOTrainer(
-    model=base,
-    args=the_trainer_bits(SETTINGS),
-    train_dataset=train_set,
-    eval_dataset=val_set,
-    processing_class=tokenizer,
-    peft_config=the_adapter_bits(SETTINGS),
-)
+    trainer = DPOTrainer(
+        model=base,
+        args=the_trainer_bits(SETTINGS),
+        train_dataset=train_set,
+        eval_dataset=val_set,
+        processing_class=tokenizer,
+        peft_config=the_adapter_bits(SETTINGS),
+    )
 
-print("off we go")
-trainer.train()
+    print("off we go")
+    trainer.train()
 
-trainer.save_model(str(saved_to))
-tokenizer.save_pretrained(str(saved_to))
-say_where(saved_to)
+    trainer.save_model(str(saved_to))
+    tokenizer.save_pretrained(str(saved_to))
+    say_where(saved_to)
